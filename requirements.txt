@@ -1,0 +1,4 @@
+supervisor
+eventlet
+devpi-server==1.1
+devpi-client==1.1

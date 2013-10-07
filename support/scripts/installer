@@ -1,0 +1,37 @@
+#!/bin/sh
+
+set -e
+
+command -v  orb >/dev/null 2>&1 || { echo >&2 "orb not found (install with 'easy_install orb')"; exit 1; }
+
+dest="$1"
+pyversion=$(python -c "import sys;print('%s.%s' % sys.version_info[:2])")
+
+if [ ! $dest ]; then
+    dest="/srv/python$pyversion"
+    orb init $dest
+fi
+
+server_root="$dest/var/devpi"
+
+if [ ! -e "$dest" ]; then
+    orb init "$dest"
+else
+    if [ ! -e "$dest/bin/activate" ]; then
+        echo "ERROR: destination must either not exist or be a virtualenv"
+        exit 1
+    fi
+    if [ -e "$server_root" ]; then
+        echo "ERROR: server directory '$server_root' already exists"
+        exit 1
+    fi
+fi
+
+mkdir -p "$server_root"
+
+git clone https://github.com/averagehuman/devpi-buildout-installer.git $server_root
+
+cd $server_root
+
+make deploy
+

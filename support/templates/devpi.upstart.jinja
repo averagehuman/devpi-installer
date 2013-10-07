@@ -1,0 +1,12 @@
+description     "devpi-server - caching pypi proxy"
+
+start on runlevel [2345]
+stop on runlevel [!2345]
+#manual
+
+respawn
+
+chdir {{server_root|abspath}}
+
+exec {{server_root|abspath}}/bin/supervisord -n -c {{conf_root|abspath}}/supervisord.conf
+
