@@ -1,7 +1,9 @@
 
 #SHELL=/bin/bash
 
+
 deploy:
+	@if [ "${version}" != "" ]; then sed -i -e "s/version\s*=.*/version=${version}/" base.cfg; fi
 	@if [ "${host}" != "" ]; then sed -i -e "s/host\s*=.*/host=${host}/" base.cfg; fi
 	@if [ "${port}" != "" ]; then sed -i -e "s/port\s*=.*/port=${port}/" base.cfg; fi
 	@if [ "${outside_url}" != "" ]; then sed -i -e "s/outside_url\s*=.*/outside_url=${outside_url}/" base.cfg; fi
@@ -11,6 +13,7 @@ deploy:
 	@if [ "${bypass_cdn}" != "" ]; then sed -i -e "s/bypass_cdn\s*=.*/bypass_cdn=${bypass_cdn}/" base.cfg; fi
 	@if [ "${secretfile}" != "" ]; then sed -i -e "s/secretfile\s*=.*/secretfile=${secretfile}/" base.cfg; fi
 	@if [ "${serverdir}" != "" ]; then sed -i -e "s/serverdir\s*=.*/serverdir=${serverdir}/" base.cfg; fi
+	@if [ "${aliasdir}" != "" ]; then sed -i -e "s/aliasdir\s*=.*/aliasdir=${aliasdir}/" base.cfg; fi
 	@if [ ! -e .installed.cfg ]; then \
 		# if we're in a virtualenv, use the associated python, else use the system python \
 		d=$$(dirname $$(pwd)); \
@@ -25,6 +28,7 @@ deploy:
 		echo "$$py"; \
 		$$py bootstrap.py; \
 	fi;
+	@sed -i -e "s/devpi-server==.*/devpi-server==$$(grep '^version\s*=.*' base.cfg | sed 's/.*=//' | sed 's/\s//g')/g" requirements.txt
 	@./bin/buildout
 
 supervisord:

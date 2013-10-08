@@ -6,7 +6,7 @@ stop on runlevel [!2345]
 
 respawn
 
-chdir {{server_root|abspath}}
+chdir {{aliasdir|abspath}}
 
-exec {{server_root|abspath}}/bin/supervisord -n -c {{conf_root|abspath}}/supervisord.conf
+exec {{aliasdir|abspath}}/bin/supervisord -n -c {{aliasdir|abspath}}/etc/supervisord.conf
 
