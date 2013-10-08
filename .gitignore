@@ -26,7 +26,6 @@ db_settings.py
 etc
 run
 log
-base.cfg
 data
 .secret
 
