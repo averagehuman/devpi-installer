@@ -1,5 +1,6 @@
 [unix_http_server]
 file = {{run_root|abspath}}/supervisor.socket
+chown = {{user}}:{{group}}
     
 [supervisord]        
 logfile={{log_root|abspath}}/supervisord.log
@@ -12,6 +13,7 @@ nodaemon=false          ; run supervisord as a daemon
 minfds=1024             ; number of startup file descriptors
 minprocs=200            ; number of process descriptors
 childlogdir={{log_root}}   ; where child log files will live
+user = {{user}}
 
 [rpcinterface:supervisor]
 supervisor.rpcinterface_factory = supervisor.rpcinterface:make_main_rpcinterface
@@ -29,4 +31,5 @@ priority=999
 startsecs = 5
 redirect_stderr = True
 autostart=True
+autorestart=True
 
