@@ -4,6 +4,12 @@ devpi-installer (Ubuntu)
 
 Create a devpi-server instance and configure supervisord to manage it.
 
+devpi
+-----
+
+devpi-server is a caching PyPi proxy, it makes Python package installation
+more reliable and much faster.
+
 
 Usage
 -----
