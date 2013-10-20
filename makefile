@@ -2,7 +2,27 @@
 #SHELL=/bin/bash
 
 
-deploy:
+setup:
+	@mkdir -p etc/buildout
+
+defaults:
+	@if [ ! -e test.cfg ]; then \
+		cat > test.cfg <<EOF \
+	\
+	[cfg] \
+	this = that \
+	\
+	EOF \
+	fi
+
+uninstall:
+	@if [ -e ./bin/uninstall ]; then \
+	    echo "uninstalling"; \
+		./bin/uninstall; \
+		rm -f etc/buildout/.installed.cfg; \
+	fi
+
+install:
 	@if [ "${version}" != "" ]; then sed -i -e "s/version\s*=.*/version=${version}/" base.cfg; fi
 	@if [ "${host}" != "" ]; then sed -i -e "s/host\s*=.*/host=${host}/" base.cfg; fi
 	@if [ "${port}" != "" ]; then sed -i -e "s/port\s*=.*/port=${port}/" base.cfg; fi
@@ -15,7 +35,6 @@ deploy:
 	@if [ "${serverdir}" != "" ]; then sed -i -e "s/serverdir\s*=.*/serverdir=${serverdir}/" base.cfg; fi
 	@if [ "${aliasdir}" != "" ]; then sed -i -e "s/aliasdir\s*=.*/aliasdir=${aliasdir}/" base.cfg; fi
 	@if [ ! -e .installed.cfg ]; then \
-		# if we're in a virtualenv, use the associated python, else use the system python \
 		d=$$(dirname $$(pwd)); \
 		py="python"; \
 		until [ "$$d" = "/" ]; do \
@@ -25,22 +44,12 @@ deploy:
 			fi; \
 		d=$$(dirname $$d); \
 		done; \
-		echo "$$py"; \
+		echo " Bootstrapping with $$py"; \
 		$$py bootstrap.py; \
 	fi;
 	@sed -i -e "s/devpi-server==.*/devpi-server==$$(grep '^version\s*=.*' base.cfg | sed 's/.*=//' | sed 's/\s//g')/g" requirements.txt
+	@apt-get -y install supervisor
 	@./bin/buildout
-
-supervisord:
-	@if [ ! -e run/supervisord.pid ] || [ $$(kill -0 $$(cat run/supervisord.pid)) ]; then ./bin/supervisord; fi
-
-status: supervisord
-	@./bin/supervisorctl status
-
-start: supervisord
-	@./bin/supervisorctl start all
-
-stop: supervisord
-	@./bin/supervisorctl stop all
+	@mv etc/supervisor.conf /etc/supervisor/conf.d/devpi.conf
 
 
