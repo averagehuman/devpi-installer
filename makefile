@@ -5,23 +5,6 @@
 setup:
 	@mkdir -p etc/buildout
 
-defaults:
-	@if [ ! -e test.cfg ]; then \
-		cat > test.cfg <<EOF \
-	\
-	[cfg] \
-	this = that \
-	\
-	EOF \
-	fi
-
-uninstall:
-	@if [ -e ./bin/uninstall ]; then \
-	    echo "uninstalling"; \
-		./bin/uninstall; \
-		rm -f etc/buildout/.installed.cfg; \
-	fi
-
 install:
 	@if [ "${version}" != "" ]; then sed -i -e "s/version\s*=.*/version=${version}/" base.cfg; fi
 	@if [ "${host}" != "" ]; then sed -i -e "s/host\s*=.*/host=${host}/" base.cfg; fi
