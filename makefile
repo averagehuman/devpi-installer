@@ -35,4 +35,6 @@ install:
 	@./bin/buildout
 	@mv etc/supervisor.conf /etc/supervisor/conf.d/devpi-server.conf
 
+stop:
+	@supervisorctl stop devpi-server
 
