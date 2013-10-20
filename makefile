@@ -33,6 +33,6 @@ install:
 	@sed -i -e "s/devpi-server==.*/devpi-server==$$(grep '^version\s*=.*' base.cfg | sed 's/.*=//' | sed 's/\s//g')/g" requirements.txt
 	@apt-get -y install supervisor
 	@./bin/buildout
-	@mv etc/supervisor.conf /etc/supervisor/conf.d/devpi.conf
+	@mv etc/supervisor.conf /etc/supervisor/conf.d/devpi-server.conf
 
 
