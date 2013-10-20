@@ -1,0 +1,25 @@
+
+devpi-installer (Ubuntu)
+========================
+
+Create a devpi-server instance and configure supervisord to manage it.
+
+
+Usage
+-----
+
+Clone source::
+
+    $ git clone git@github.com:averagehuman/devpi-installer.git
+
+In the source directory run the ``install`` make target::
+
+    $ cd devpi-installer
+    $ sudo make install
+
+Start the server with::
+
+    $ supervisorctl reread
+    $ supervisorctl update
+
+
