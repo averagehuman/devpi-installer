@@ -1,3 +1,4 @@
 eventlet
+requests>=2.0.1
 devpi-server
 devpi-client
