@@ -6,7 +6,6 @@ setup:
 	@mkdir -p etc/buildout
 
 install:
-	@if [ "${version}" != "" ]; then sed -i -e "s/version\s*=.*/version=${version}/" base.cfg; fi
 	@if [ "${host}" != "" ]; then sed -i -e "s/host\s*=.*/host=${host}/" base.cfg; fi
 	@if [ "${port}" != "" ]; then sed -i -e "s/port\s*=.*/port=${port}/" base.cfg; fi
 	@if [ "${outside_url}" != "" ]; then sed -i -e "s/outside_url\s*=.*/outside_url=${outside_url}/" base.cfg; fi
@@ -30,10 +29,9 @@ install:
 		echo " Bootstrapping with $$py"; \
 		$$py bootstrap.py; \
 	fi;
-	@sed -i -e "s/devpi-server==.*/devpi-server==$$(grep '^version\s*=.*' base.cfg | sed 's/.*=//' | sed 's/\s//g')/g" requirements.txt
 	@apt-get -y install supervisor
 	@./bin/buildout
-	@mv etc/supervisor.conf /etc/supervisor/conf.d/devpi-server.conf
+	@cp etc/supervisor.conf /etc/supervisor/conf.d/devpi-server.conf
 
 stop:
 	@supervisorctl stop devpi-server
