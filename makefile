@@ -9,7 +9,6 @@ install:
 	@if [ "${host}" != "" ]; then sed -i -e "s/host\s*=.*/host=${host}/" base.cfg; fi
 	@if [ "${port}" != "" ]; then sed -i -e "s/port\s*=.*/port=${port}/" base.cfg; fi
 	@if [ "${outside_url}" != "" ]; then sed -i -e "s/outside_url\s*=.*/outside_url=${outside_url}/" base.cfg; fi
-	@if [ "${bottleserver}" != "" ]; then sed -i -e "s/bottleserver\s*=.*/bottleserver=${bottleserver}/" base.cfg; fi
 	@if [ "${debug}" != "" ]; then sed -i -e "s/debug\s*=.*/debug=${debug}/" base.cfg; fi
 	@if [ "${refresh}" != "" ]; then sed -i -e "s/refresh\s*=.*/refresh=${refresh}/" base.cfg; fi
 	@if [ "${bypass_cdn}" != "" ]; then sed -i -e "s/bypass_cdn\s*=.*/bypass_cdn=${bypass_cdn}/" base.cfg; fi
@@ -29,10 +28,15 @@ install:
 		echo " Bootstrapping with $$py"; \
 		$$py bootstrap.py; \
 	fi;
-	@apt-get -y install supervisor
 	@./bin/buildout
 	@cp etc/supervisor.conf /etc/supervisor/conf.d/devpi-server.conf
 
 stop:
 	@supervisorctl stop devpi-server
+
+start:
+	@supervisorctl start devpi-server
+
+reinstall: stop install start
+
 
